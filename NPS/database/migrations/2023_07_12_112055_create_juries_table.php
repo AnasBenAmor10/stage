@@ -11,21 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supervisors', function (Blueprint $table) {
+        Schema::create('juries', function (Blueprint $table) {
+            $table->unsignedBigInteger('stage_id');
             $table->unsignedBigInteger('encadrant_id');
-            $table->integer('Nombre');
             $table->timestamps();
-        });
 
-        Schema::table('supervisors', function (Blueprint $table) {
+            // Define other columns here
+
+            $table->foreign('stage_id')->references('id')->on('stages');
             $table->foreign('encadrant_id')->references('id')->on('users');
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('supervisors');
+        Schema::dropIfExists('juries');
     }
 };

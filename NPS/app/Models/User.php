@@ -19,8 +19,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'first_name',
         'email',
         'password',
+        'Numero',
+        'adresse',
+        'image',
+        'cin',
+        'role',
+        'is_superadmin',
+        'is_admin',
     ];
 
     /**
@@ -40,6 +48,17 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'is_superadmin' => 'boolean',
+        'is_admin' => 'boolean',
     ];
+
+    public function stagesAsEtudiant()
+    {
+        return $this->hasMany(Stage::class, 'etudiant_id');
+    }
+
+    public function stagesAsEncadrant()
+    {
+        return $this->belongsToMany(Stage::class, 'stage_encadrant', 'encadrant_id', 'stage_id');
+    }
 }

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('stages', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->string('end_of_internship_certificate');
-            $table->foreignId('company_id');
-            $table->string('rapport');
+            $table->string('type', 255)->nullable();
+            $table->string('end_of_internship_certificate', 255)->nullable();
+            $table->string('rapport', 255)->nullable();
+            $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('etudiant_id');
             $table->unsignedBigInteger('encadrant_id');
             $table->string('journal');
@@ -26,8 +26,7 @@ return new class extends Migration
             $table->date('dateF_stage');
             $table->date('dateS');
             $table->timestamps();
-        });
-        Schema::create('stages', function (Blueprint $table) {
+            $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('etudiant_id')->references('id')->on('users');
             $table->foreign('encadrant_id')->references('id')->on('users');
         });
