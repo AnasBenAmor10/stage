@@ -27,8 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'image',
         'cin',
         'role',
-        'is_superadmin',
-        'is_admin',
+
     ];
 
     /**
@@ -50,6 +49,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'is_superadmin' => 'boolean',
         'is_admin' => 'boolean',
+    ];
+    protected $attributes = [
+        'is_superadmin' => false,
+        'is_admin' => false,
     ];
 
     public function stagesAsEtudiant()

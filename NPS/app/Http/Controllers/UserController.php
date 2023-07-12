@@ -6,21 +6,22 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
-{
 
+{
     public function index()
     {
         $users = User::all();
-        return view('users.index', compact('users'));
+        return view('users.index', ['users' => $users]);
     }
 
-    public function create()
+    public function form()
     {
-        return view('users.create');
+        return view('users.form');
     }
 
-    public function store(Request $request)
+    public function create(Request $request)
     {
+        // Validation des données du formulaire
         $request->validate([
             'name' => 'required',
             'first_name' => 'required',
@@ -33,16 +34,32 @@ class UserController extends Controller
             'role' => 'required',
         ]);
 
-        User::create($request->all());
+        // Création de l'utilisateur dans la base de données
+        $user = User::create([
+            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'Numero' => $request->Numero,
+            'adresse' => $request->adresse,
+            'image' => $request->image,
+            'cin' => $request->cin,
+            'role' => $request->role,
+        ]);
 
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
+        // Redirection vers la liste des utilisateurs
+        return redirect('users');
     }
 
-    public function edit(User $user)
+
+    public function delete($id)
     {
-        return view('users.edit', compact('user'));
+        $user = User::find($id);
+        if ($user) {
+            $user->delete();
+            return redirect('users');
+        }
     }
-
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -59,13 +76,6 @@ class UserController extends Controller
 
         $user->update($request->all());
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
-    }
-
-    public function destroy(User $user)
-    {
-        $user->delete();
-
-        return redirect()->route('users.index')->with('success', 'User deleted successfully.');
+        return redirect('users');
     }
 }
