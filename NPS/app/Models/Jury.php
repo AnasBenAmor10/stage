@@ -5,7 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class jury extends Model
+class Jury extends Model
 {
     use HasFactory;
+
+
+    public function stages()
+    {
+        return $this->belongsToMany(Stage::class, 'Stage_id');
+    }
 }

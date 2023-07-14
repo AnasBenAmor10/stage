@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="card-footer">
                                     <small class="text-muted">{{$user->created_at}}</small>
-                                    <a href="users/{{$user->id}}/update" class="btn btn-primary">Update</a>
+                                    <a href="users/{{$user->id}}/edit" class="btn btn-primary">Update</a>
                                     <a href="users/{{$user->id}}/delete"><button class="btn btn-danger">Delete</button></a>
                                 </div>
                             </div>

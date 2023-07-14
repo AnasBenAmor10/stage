@@ -46,6 +46,8 @@ class UserController extends Controller
             'cin' => $request->cin,
             'role' => $request->role,
         ]);
+        $this->authorize('create', User::class);
+
 
         // Redirection vers la liste des utilisateurs
         return redirect('users');
@@ -55,11 +57,20 @@ class UserController extends Controller
     public function delete($id)
     {
         $user = User::find($id);
+        $this->authorize('delete', User::class);
+
         if ($user) {
             $user->delete();
             return redirect('users');
         }
     }
+    public function edit($id)
+    {
+        $user = User::find($id);
+
+        return view('users.edit')->with('user', $user);
+    }
+
     public function update(Request $request, User $user)
     {
         $request->validate([
@@ -73,6 +84,8 @@ class UserController extends Controller
             'cin' => 'required',
             'role' => 'required',
         ]);
+        $this->authorize('update', User::class);
+
 
         $user->update($request->all());
 

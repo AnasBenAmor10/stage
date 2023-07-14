@@ -51,8 +51,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_admin' => 'boolean',
     ];
     protected $attributes = [
+        'first_name' => '',
         'is_superadmin' => false,
         'is_admin' => false,
+        'Numero' => 0,
+        'adresse' => '',
+        'image' => 'default.jpg',
+        'cin' => 0,
+        'role' => 0,
     ];
 
     public function stagesAsEtudiant()
