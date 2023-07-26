@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 
@@ -14,19 +15,17 @@ class UserController extends Controller
         return view('users.index', ['users' => $users]);
     }
 
-    public function form()
+    public function create()
     {
-        return view('users.form');
+        return view('users.register');
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
-        // Validation des données du formulaire
-        $request->validate([
-            'name' => 'required',
-            'first_name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required',
+        $formFields = $request->validate([
+            'name' => ['required', 'min:3'],
+            'email' => ['required', 'email', Rule::unique('users', 'email')],
+            'password' => 'required|confirmed|min:6',
             'Numero' => 'required',
             'adresse' => 'required',
             'image' => 'required',
@@ -34,23 +33,16 @@ class UserController extends Controller
             'role' => 'required',
         ]);
 
-        // Création de l'utilisateur dans la base de données
-        $user = User::create([
-            'name' => $request->name,
-            'first_name' => $request->first_name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'Numero' => $request->Numero,
-            'adresse' => $request->adresse,
-            'image' => $request->image,
-            'cin' => $request->cin,
-            'role' => $request->role,
-        ]);
-        $this->authorize('create', User::class);
+        // Hash Password
+        $formFields['password'] = bcrypt($formFields['password']);
 
+        // Create User
+        $user = User::create($formFields);
 
-        // Redirection vers la liste des utilisateurs
-        return redirect('users');
+        // Login
+        auth()->login($user);
+
+        return redirect('/')->with('message', 'User created and logged in');
     }
 
 
@@ -90,5 +82,37 @@ class UserController extends Controller
         $user->update($request->all());
 
         return redirect('users');
+    }
+    public function logout(Request $request)
+    {
+        auth()->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('message', 'You have been logged out!');
+    }
+
+    // Show Login Form
+    public function login()
+    {
+        return view('users.login');
+    }
+
+    // Authenticate User
+    public function authenticate(Request $request)
+    {
+        $formFields = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => 'required'
+        ]);
+
+        if (auth()->attempt($formFields)) {
+            $request->session()->regenerate();
+
+            return redirect('/')->with('message', 'You are now logged in!');
+        }
+
+        return back()->withErrors(['email' => 'Invalid Credentials'])->onlyInput('email');
     }
 }

@@ -18,8 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'first_name',
+        'full_name',
         'email',
         'password',
         'Numero',
@@ -51,7 +50,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_admin' => 'boolean',
     ];
     protected $attributes = [
-        'first_name' => '',
         'is_superadmin' => false,
         'is_admin' => false,
         'Numero' => 0,
